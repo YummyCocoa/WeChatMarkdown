@@ -45,6 +45,11 @@ export default {
   ],
   colorOption: [
     {
+      label: `活力橘`,
+      value: `rgba(250, 81, 81, 1)`,
+      desc: `热情活泼`,
+    },
+    {
       label: `经典蓝`,
       value: `rgba(15, 76, 129, 1)`,
       desc: `最新流行`,
@@ -53,11 +58,6 @@ export default {
       label: `翡翠绿`,
       value: `rgba(0, 152, 116, 1)`,
       desc: `优雅清新`,
-    },
-    {
-      label: `活力橘`,
-      value: `rgba(250, 81, 81, 1)`,
-      desc: `热情活泼`,
     },
     // { label: `微信绿`, value: `rgb(26, 173, 25,1)`, desc: `经典微信绿` },
   ],

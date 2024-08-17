@@ -185,7 +185,6 @@ import DEFAULT_CSS_CONTENT from '@/assets/example/theme-css.txt'
 import config from '@/assets/scripts/config'
 import ResetDialog from './ResetDialog'
 import StyleOptionMenu from './StyleOptionMenu'
-import PostInfoDialog from './PostInfoDialog'
 
 export default {
   name: `editor-header`,
@@ -238,7 +237,6 @@ export default {
     }
   },
   components: {
-    PostInfoDialog,
     StyleOptionMenu,
     ResetDialog,
   },

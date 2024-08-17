@@ -9,7 +9,12 @@
   >
     <div style="text-align: center">
       <h3>一款高度简洁的微信 Markdown 编辑器</h3>
-      <p>基于项目: <a href="https://github.com/doocs/md" target="_blank" >WeChat Markdown Editor</a></p>
+      <p>
+        基于项目:
+        <a href="https://github.com/doocs/md" target="_blank"
+          >WeChat Markdown Editor</a
+        >
+      </p>
     </div>
     <template slot="footer">
       <el-button
