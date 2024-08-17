@@ -1,11 +1,5 @@
 <template>
-  <div
-    class="container"
-    :class="{ container_night: nightMode }"
-    @keydown.alt.shift.k="addFormat('[', ']()')"
-    @keydown.alt.shift.u="addFormat('~~')"
-    @keydown.ctrl.alt.l="formatContent()"
-  >
+  <div class="container" :class="{ container_night: nightMode }">
     <el-container>
       <el-header class="editor__header">
         <editor-header
@@ -28,6 +22,7 @@
       <el-main class="main-body">
         <el-row class="main-section">
           <el-col
+            :style="{ order: store.isEditOnLeft ? 0 : 1 }"
             :span="12"
             class="codeMirror-wrapper"
             ref="codeMirrorWrapper"
@@ -447,7 +442,6 @@ export default {
     onEditorRefresh() {
       this.codeThemeChanged(this.codeTheme)
       this.editorRefresh()
-      setTimeout(() => window.PR.prettyPrint(), 0)
     },
     // 复制结束
     endCopy() {
@@ -614,8 +608,14 @@ export default {
   mounted() {
     setTimeout(() => {
       this.leftAndRightScroll()
-      window.PR.prettyPrint()
     }, 300)
+  },
+  setup() {
+    const store = useStore()
+
+    return {
+      store,
+    }
   },
 }
 </script>

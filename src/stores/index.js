@@ -6,7 +6,16 @@ import config from '../assets/scripts/config'
 import WxRenderer from '../assets/scripts/renderers/wx-renderer'
 import DEFAULT_CONTENT from '@/assets/example/markdown.md'
 import DEFAULT_CSS_CONTENT from '@/assets/example/theme-css.txt'
-import { setColor, formatDoc, formatCss } from '@/assets/scripts/util'
+import {
+  formatDoc,
+  formatCss,
+  setFontSize,
+  setColorWithCustomTemplate,
+} from '@/assets/scripts/util'
+
+const defaultKeyMap = CodeMirror.keyMap[`default`]
+const modPrefix =
+  defaultKeyMap === CodeMirror.keyMap[`macDefault`] ? `Cmd` : `Ctrl`
 
 export const useStore = defineStore(`store`, {
   state: () => ({
@@ -21,7 +30,9 @@ export const useStore = defineStore(`store`, {
     citeStatus: false,
     nightMode: false,
     codeTheme: config.codeThemeOption[2].value,
+    legend: config.legendOption[3].value,
     isMacCodeBlock: true,
+    isEditOnLeft: true,
   }),
   actions: {
     setEditorValue(data) {
@@ -53,9 +64,17 @@ export const useStore = defineStore(`store`, {
       this.codeTheme = data
       localStorage.setItem(`codeTheme`, data)
     },
+    setCurrentLegend(data) {
+      this.legend = data
+      localStorage.setItem(`legend`, data)
+    },
     setIsMacCodeBlock(data) {
       this.isMacCodeBlock = data
       localStorage.setItem(`isMacCodeBlock`, data)
+    },
+    setIsEditOnLeft(data) {
+      this.isEditOnLeft = data
+      localStorage.setItem(`isEditOnLeft`, data)
     },
     themeChanged() {
       this.nightMode = !this.nightMode
@@ -70,13 +89,18 @@ export const useStore = defineStore(`store`, {
         localStorage.getItem(`size`) || config.sizeOption[2].value
       this.codeTheme =
         localStorage.getItem(`codeTheme`) || config.codeThemeOption[2].value
+      this.legend =
+        localStorage.getItem(`legend`) || config.legendOption[3].value
       this.citeStatus = localStorage.getItem(`citeStatus`) === `true`
       this.nightMode = localStorage.getItem(`nightMode`) === `true`
       this.isMacCodeBlock = !(
         localStorage.getItem(`isMacCodeBlock`) === `false`
       )
+      this.isEditOnLeft = !(localStorage.getItem(`isEditOnLeft`) === `false`)
+
+      const theme = setFontSize(this.currentSize.replace(`px`, ``))
       this.wxRenderer = new WxRenderer({
-        theme: setColor(this.currentColor),
+        theme: setColorWithCustomTemplate(theme, this.currentColor),
         fonts: this.currentFont,
         size: this.currentSize,
       })
@@ -96,23 +120,30 @@ export const useStore = defineStore(`store`, {
         styleActiveLine: true,
         autoCloseBrackets: true,
         extraKeys: {
-          'Ctrl-F': function autoFormat(editor) {
+          [`${modPrefix}-F`]: function autoFormat(editor) {
             const doc = formatDoc(editor.getValue(0))
             localStorage.setItem(`__editor_content`, doc)
             editor.setValue(doc)
           },
-          'Ctrl-S': function save(editor) {},
-          'Ctrl-B': function bold(editor) {
+          [`${modPrefix}-B`]: function bold(editor) {
             const selected = editor.getSelection()
             editor.replaceSelection(`**${selected}**`)
           },
-          'Ctrl-D': function del(editor) {
+          [`${modPrefix}-D`]: function del(editor) {
             const selected = editor.getSelection()
             editor.replaceSelection(`~~${selected}~~`)
           },
-          'Ctrl-I': function italic(editor) {
+          [`${modPrefix}-I`]: function italic(editor) {
             const selected = editor.getSelection()
             editor.replaceSelection(`*${selected}*`)
+          },
+          [`${modPrefix}-K`]: function italic(editor) {
+            const selected = editor.getSelection()
+            editor.replaceSelection(`[${selected}]()`)
+          },
+          [`${modPrefix}-L`]: function code(editor) {
+            const selected = editor.getSelection()
+            editor.replaceSelection(`\`${selected}\``)
           },
         },
       })
@@ -132,12 +163,12 @@ export const useStore = defineStore(`store`, {
         matchBrackets: true,
         autofocus: true,
         extraKeys: {
-          'Ctrl-F': function autoFormat(editor) {
+          [`${modPrefix}-F`]: function autoFormat(editor) {
             const doc = formatCss(editor.getValue(0))
             localStorage.setItem(`__css_content`, doc)
             editor.setValue(doc)
           },
-          'Ctrl-S': function save(editor) {},
+          [`${modPrefix}-S`]: function save(editor) {},
         },
       })
     },
@@ -166,9 +197,9 @@ export const useStore = defineStore(`store`, {
               height: 25px;
               background-color: transparent;
               background-image: url("https://doocs.oss-cn-shenzhen.aliyuncs.com/img/123.svg");
-              background-position: 14px 10px;
+              background-position: 14px 10px!important;
               background-repeat: no-repeat;
-              background-size: 40px;
+              background-size: 40px!important;
             }
 
             .hljs.code__pre {
