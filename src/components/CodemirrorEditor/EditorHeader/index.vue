@@ -151,16 +151,7 @@
     <el-button plain size="medium" :type="btnType" @click="copy">
       复制
     </el-button>
-    <el-button plain size="medium" :type="btnType" @click="prePost">
-      发布
-    </el-button>
 
-    <post-info-dialog
-      :form="form"
-      @post="post"
-      @close="form.dialogVisible = false"
-    >
-    </post-info-dialog>
     <reset-dialog
       :show-reset-confirm="showResetConfirm"
       @confirm="confirmReset"
@@ -257,36 +248,6 @@ export default {
     },
     showPicker() {
       this.$refs.colorPicker.showPicker = true
-    },
-    prePost() {
-      let auto = {}
-      try {
-        auto = {
-          thumb: document.querySelector(`#output img`).src,
-          title: [1, 2, 3, 4, 5, 6]
-            .map((h) => document.querySelector(`#output h${h}`))
-            .filter((h) => h)[0].innerText,
-          desc: document.querySelector(`#output p`).innerText,
-          content: this.output,
-        }
-      } catch (error) {
-        console.log(`error`, error)
-      }
-      this.form = {
-        dialogVisible: true,
-        ...auto,
-        auto,
-      }
-    },
-    post() {
-      this.form.dialogVisible = false
-      // 使用 window.$syncer 可以检测是否安装插件
-      window.syncPost({
-        title: this.form.title || this.form.auto.title,
-        desc: this.form.desc || this.form.auto.desc,
-        content: this.form.content || this.form.auto.content,
-        thumb: this.form.thumb || this.form.auto.thumb,
-      })
     },
     fontChanged(fonts) {
       this.setWxRendererOptions({

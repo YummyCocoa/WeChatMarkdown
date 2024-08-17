@@ -279,6 +279,7 @@ export default {
       })
 
       // 粘贴上传图片并插入
+      /**
       this.editor.on(`paste`, (cm, e) => {
         if (!(e.clipboardData && e.clipboardData.items) || this.isImgLoading) {
           return
@@ -296,6 +297,7 @@ export default {
           }
         }
       })
+       */
 
       this.editor.on(`mousedown`, () => {
         this.rightClickMenuVisible = false
